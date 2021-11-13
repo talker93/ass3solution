@@ -249,4 +249,17 @@ def track_pitch(x,blockSize,hopSize,fs,method,voicingThres):
 
 if __name__ == '__main__':
     # executeassign3()
-    print(run_evaluation('/Users/vedant/Desktop/Programming/ACA-assignments/ass3solution/trainData/'))
+    # print(run_evaluation('/Users/vedant/Desktop/Programming/ACA-assignments/ass3solution/trainData/'))
+    name='01-D_AMairena'
+    complete_path_to_data_folder='/Users/vedant/Desktop/Programming/ACA-assignments/ass3solution/trainData/'
+    sr,x = ToolReadAudio(complete_path_to_data_folder+name+'.wav')
+    lut = np.loadtxt(complete_path_to_data_folder+name+'.f0.Corrected.txt')
+    duration_seconds = lut[:,1]
+    pitch_frequency = lut[:,2]
+    hopSize = np.ceil(x.shape[0]/duration_seconds.shape[0]).astype(int)
+    blockSize = 2 * hopSize
+
+    f0,ts = track_pitch_fftmax(x,blockSize,hopSize,sr)
+    err,pfp,pfn = eval_pitchtrack_v2(f0,pitch_frequency)
+
+    print(err,pfp,pfn)
